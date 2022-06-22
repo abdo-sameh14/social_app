@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "244502216538",
+    "project_id": "flutter-social-app-881ba",
+    "storage_bucket": "flutter-social-app-881ba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:244502216538:android:8064c5ba2529dd84703d63",
+        "android_client_info": {
+          "package_name": "com.abdo_sameh.social_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "244502216538-h47llav9aipspt9pv7m6sfi8c0dlbgto.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_tiBPdEXDQtMwVlowqk3XyE7onm8aJik"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "244502216538-h47llav9aipspt9pv7m6sfi8c0dlbgto.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
