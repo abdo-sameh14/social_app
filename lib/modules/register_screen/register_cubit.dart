@@ -48,12 +48,13 @@ class RegisterScreenCubit extends Cubit<RegisterScreenStates> {
         firstName,
         lastName,
         phone,
-        uId);
+        uId
+    );
 
     FirebaseFirestore.instance
         .collection('Users').doc(uId)
         .set(model.toMap()).then((value){
-          emit(RegisterScreenCreateUserSuccessState());
+          emit(RegisterScreenCreateUserSuccessState(uId));
     }).catchError((error){
       emit(RegisterScreenCreateUserErrorState(error.toString()));
     });

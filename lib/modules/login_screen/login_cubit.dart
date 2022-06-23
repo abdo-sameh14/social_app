@@ -22,7 +22,7 @@ class LoginScreenCubit extends Cubit<LoginScreenStates> {
     ).then((value) {
       print(value.user?.email);
       print(value.user?.uid);
-      emit(LoginScreenSuccessState());
+      emit(LoginScreenSuccessState(value.user!.uid));
     }).catchError((error){
       print(error.toString());
       emit(LoginScreenErrorState(error.toString()));
