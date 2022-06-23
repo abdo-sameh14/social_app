@@ -1,10 +1,14 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_app/layout/cubit/social_cubit.dart';
 import 'package:social_app/layout/social_layout.dart';
 import 'package:social_app/modules/register_screen/register_states.dart';
 import '../../shared/components/components.dart';
 import 'package:social_app/modules/register_screen/register_cubit.dart';
+
+import '../../shared/components/constants.dart';
+import '../../shared/network/local/chache _helper.dart';
 
 
 class RegisterScreen extends StatelessWidget {
@@ -20,14 +24,19 @@ class RegisterScreen extends StatelessWidget {
       create: (BuildContext context) => RegisterScreenCubit(),
       child: BlocConsumer<RegisterScreenCubit, RegisterScreenStates>(
           listener: (context, state) {
-            if(state is RegisterScreenSuccessState){
-              showToast(msg: 'Register Successfully!', state: ToastStates.success);
+            if(state is RegisterScreenCreateUserSuccessState){
+              CacheHelper.setData(key: 'uId', value: state.uId).then((value) {
+                uId = state.uId;
+                SocialCubit.get(context).getUserData();
+                showToast(msg: 'Register Successfully!', state: ToastStates.success);
+                navigateAndReplaceTo(context, SocialLayoutScreen());
+              });
             }
             if(state is RegisterScreenErrorState){
               showToast(msg: state.error, state: ToastStates.error);
             }
-            if(state is RegisterScreenCreateUserSuccessState){
-              navigateAndReplaceTo(context, SocialLayoutScreen());
+            if(state is RegisterScreenCreateUserErrorState){
+              showToast(msg: state.error, state: ToastStates.error);
             }
             // if (state is RegisterScreenSuccessState) {
             //   if (state.registerModel!.status!) {

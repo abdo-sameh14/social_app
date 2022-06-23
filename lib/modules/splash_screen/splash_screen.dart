@@ -3,9 +3,9 @@
 // import 'package:flutter_bloc/flutter_bloc.dart';
 //
 // import 'package:page_transition/page_transition.dart';
-// import 'package:social_app/layout/cubit/cubit.dart';
+// import 'package:social_app/layout/cubit/social_cubit.dart';
 //
-// import '../../layout/cubit/states.dart';
+// import '../../layout/cubit/social_states.dart';
 // import '../onBoarding_screen/onBoarding_screen.dart';
 //
 // class SplashScreen extends StatelessWidget {

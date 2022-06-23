@@ -10,6 +10,8 @@ void printFullText(String text)
 
 String? token;
 
+String? uId;
+
 void signOut(
     context,
     {required loginScreen}

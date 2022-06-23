@@ -4,7 +4,7 @@ class RegisterScreenInitialState extends RegisterScreenStates {}
 
 class RegisterScreenLoadingState extends RegisterScreenStates {}
 
-class RegisterScreenSuccessState extends RegisterScreenStates {}
+// class RegisterScreenSuccessState extends RegisterScreenStates {}
 
 class RegisterScreenErrorState extends RegisterScreenStates {
 
@@ -12,7 +12,12 @@ class RegisterScreenErrorState extends RegisterScreenStates {
   RegisterScreenErrorState(this.error);
 }
 
-class RegisterScreenCreateUserSuccessState extends RegisterScreenStates {}
+class RegisterScreenCreateUserSuccessState extends RegisterScreenStates {
+  final String uId;
+
+  RegisterScreenCreateUserSuccessState(this.uId);
+
+}
 
 class RegisterScreenCreateUserErrorState extends RegisterScreenStates {
 
