@@ -31,22 +31,24 @@ ThemeData lightTheme = ThemeData(
         backgroundColor: Colors.white
     ),
     scaffoldBackgroundColor: Colors.white,
-    textTheme: TextTheme(
-      bodyText1: const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-          color: Colors.black
+    textTheme: const TextTheme(
+      bodyText1: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+        color: Colors.black,
+        height: 1.3,
       ),
       bodyText2: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: Colors.white.withOpacity(0.6)
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
+        color: Colors.black,
+        height: 1.3,
       ),
     )
 );
 
 ThemeData darkTheme = ThemeData(
-    primarySwatch: defaultColor,
+    primarySwatch: Colors.deepOrange,
     appBarTheme: AppBarTheme(
       titleSpacing: 20,
       systemOverlayStyle: const SystemUiOverlayStyle(
@@ -67,7 +69,7 @@ ThemeData darkTheme = ThemeData(
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       type: BottomNavigationBarType.fixed,
-      selectedItemColor: defaultColor,
+      selectedItemColor: Colors.deepOrange,
       unselectedItemColor: Colors.grey,
       elevation: 20,
       backgroundColor: Colors.grey[900],

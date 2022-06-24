@@ -11,7 +11,7 @@ import 'layout/home_screen/home_states.dart';
 import 'modules/login_screen/login_screen.dart';
 import 'modules/onBoarding_screen/onBoarding_screen.dart';
 import 'shared/components/constants.dart';
-import 'shared/styles/bloc_observer.dart';
+import 'shared/bloc_observer.dart';
 import 'shared/styles/themes.dart';
 
 void main(context) async {
