@@ -45,10 +45,14 @@ class RegisterScreenCubit extends Cubit<RegisterScreenStates> {
     required String uId,
   }){
     UsersModel model = UsersModel(
-        firstName,
-        lastName,
-        phone,
-        uId
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      phone: phone,
+      pic: 'https://www.pngitem.com/pimgs/m/150-1503941_user-windows-10-user-icon-png-transparent-png.png',
+      coverPic: 'https://theoheartist.com/wp-content/uploads/sites/2/2015/01/fbdefault.png',
+      bio: 'Write your bio...',
+      uId: uId,
     );
 
     FirebaseFirestore.instance

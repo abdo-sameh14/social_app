@@ -277,7 +277,7 @@ Widget buildPostItem(context) => Card(
               height: 10,
             ),
             Container(
-              height: 180,
+              height: 200,
               width: double.infinity,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4),
