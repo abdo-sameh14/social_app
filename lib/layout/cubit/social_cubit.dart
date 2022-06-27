@@ -36,6 +36,20 @@ class SocialCubit extends Cubit<SocialStates> {
     });
   }
 
+  void updateUserData() {
+    emit(SocialUpdateUserDataLoadingState());
+    FirebaseFirestore.instance
+        .collection('Users')
+        .doc(uId)
+        .update(model!.toMap())
+        .then((value) {
+          getUserData();
+          emit(SocialUpdateUserDataSuccessState());
+    }).catchError((error){
+      emit(SocialUpdateUserDataErrorState(error.toString()));
+    });
+  }
+
   int currentIndex = 0;
 
   void changeBotNavBar(index){
