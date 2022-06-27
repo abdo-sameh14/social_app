@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:social_app/modules/open_image/open_image.dart';
 import 'package:social_app/shared/styles/colors.dart';
+import 'package:social_app/shared/styles/icon_broken.dart';
 import '../../layout/home_screen/home_cubit.dart';
 
 
@@ -90,6 +93,40 @@ Widget defaultButton(
         ),
       ),
     );
+
+AppBar defaultAppBar(
+        {
+          required BuildContext context,
+          String? title,
+          Color? backgroundColor,
+          Color? leadingIconColor,
+          Color? statusBarColor,
+          Brightness? statusBarIconBrightness,
+          List<Widget>? action}) =>
+    AppBar(
+      systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: statusBarColor ?? Colors.white,
+          statusBarIconBrightness: statusBarIconBrightness ?? Brightness.dark
+      ),
+      leading: IconButton(
+        icon: Icon(
+          IconBroken.Arrow___Left_2,
+          color: leadingIconColor ?? Theme.of(context).appBarTheme.iconTheme?.color,
+        ),
+        onPressed: (){
+          Navigator.pop(context);
+          },
+      ),
+      titleSpacing: 0.0,
+      title: Text(title ?? ''),
+      actions: action,
+      backgroundColor: backgroundColor ?? Theme.of(context).appBarTheme.backgroundColor,
+    );
+
+Future openImage({
+  required context,
+  required String image
+}) => navigateTo(context, OpenImageScreen(image: image));
 
 Future navigateTo(context, nextScreen) => Navigator.push(context, MaterialPageRoute(builder: (context) => nextScreen));
 

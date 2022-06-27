@@ -4,6 +4,7 @@ import 'package:social_app/layout/cubit/social_cubit.dart';
 import 'package:social_app/layout/cubit/social_states.dart';
 import 'package:social_app/shared/styles/icon_broken.dart';
 
+import '../../shared/components/components.dart';
 import '../../shared/styles/colors.dart';
 
 class NewsFeedScreen extends StatelessWidget {
@@ -276,18 +277,23 @@ Widget buildPostItem(context) => Card(
             const SizedBox(
               height: 10,
             ),
-            Container(
-              height: 200,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
-                  image: const DecorationImage(
-                      image: NetworkImage(
-                        'https://img.freepik.com/free-photo/happy-smiling-millennial-girl-with-red-hair-holds-modern-cellular-enjoys-texting-social-media-uses-mobile-network-services-wears-blue-jumper-hat_273609-46497.jpg',
-                      ),
-                      fit: BoxFit.cover
-                  )
+            InkWell(
+              child: Container(
+                height: 200,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    image: const DecorationImage(
+                        image: NetworkImage(
+                          'https://img.freepik.com/free-photo/happy-smiling-millennial-girl-with-red-hair-holds-modern-cellular-enjoys-texting-social-media-uses-mobile-network-services-wears-blue-jumper-hat_273609-46497.jpg',
+                        ),
+                        fit: BoxFit.cover
+                    )
+                ),
               ),
+              onTap: (){
+                openImage(context: context, image: 'https://img.freepik.com/free-photo/happy-smiling-millennial-girl-with-red-hair-holds-modern-cellular-enjoys-texting-social-media-uses-mobile-network-services-wears-blue-jumper-hat_273609-46497.jpg');
+              },
             ),
             const SizedBox(
               height: 10,
