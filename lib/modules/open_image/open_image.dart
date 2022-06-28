@@ -4,9 +4,10 @@ import 'package:social_app/shared/components/components.dart';
 import 'package:social_app/shared/styles/icon_broken.dart';
 
 class OpenImageScreen extends StatelessWidget {
-  String? image;
+  // String? image;
+  ImageProvider? imageProvider;
 
-  OpenImageScreen({this.image});
+  OpenImageScreen({this.imageProvider});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +20,7 @@ class OpenImageScreen extends StatelessWidget {
         statusBarIconBrightness: Brightness.light
       ),
       body: PhotoView(
-        imageProvider: NetworkImage(image!),
+        imageProvider: imageProvider,
         minScale: PhotoViewComputedScale.contained,
         maxScale: PhotoViewComputedScale.contained *4,
       ),

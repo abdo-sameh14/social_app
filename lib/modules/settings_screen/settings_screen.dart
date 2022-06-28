@@ -15,7 +15,7 @@ class SettingsScreen extends StatelessWidget {
     return BlocConsumer<SocialCubit, SocialStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        var model = SocialCubit.get(context).model;
+        var model = SocialCubit.get(context).userModel;
         return SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Padding(
@@ -43,7 +43,7 @@ class SettingsScreen extends StatelessWidget {
                           ),
                         ),
                         onTap: (){
-                          openImage(context: context, image: model.coverPic!);
+                          openImage(context: context, imageProvider: NetworkImage(model.coverPic!),);
                         },
                       ),
                     ),
@@ -60,7 +60,7 @@ class SettingsScreen extends StatelessWidget {
                         ),
                       ),
                       onTap: (){
-                        openImage(context: context, image: model.pic!);
+                        openImage(context: context, imageProvider: NetworkImage(model.pic!));
                       },
                       // enableFeedback: true,
                     ),

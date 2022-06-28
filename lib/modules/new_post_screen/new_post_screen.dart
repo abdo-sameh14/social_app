@@ -13,14 +13,9 @@ class NewPostScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(
-            // leading: IconButton(
-            //   icon: Icon(Icons.arrow_back),
-            //   onPressed: (){
-            //     SocialCubit.get(context).currentIndex = 0;
-            //     Navigator.pop(context);
-            //   },
-            // ),
+          appBar: defaultAppBar(
+            context: context,
+
           ),
           body: Center(child: Text('Add Post')),
         );

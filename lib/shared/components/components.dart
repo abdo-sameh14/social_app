@@ -97,7 +97,9 @@ Widget defaultButton(
 AppBar defaultAppBar(
         {
           required BuildContext context,
+          Function? backArrowFunction,
           String? title,
+          double? titleSpacing,
           Color? backgroundColor,
           Color? leadingIconColor,
           Color? statusBarColor,
@@ -115,9 +117,10 @@ AppBar defaultAppBar(
         ),
         onPressed: (){
           Navigator.pop(context);
+          backArrowFunction!();
           },
       ),
-      titleSpacing: 0.0,
+      titleSpacing: titleSpacing ?? 0,
       title: Text(title ?? ''),
       actions: action,
       backgroundColor: backgroundColor ?? Theme.of(context).appBarTheme.backgroundColor,
@@ -125,8 +128,9 @@ AppBar defaultAppBar(
 
 Future openImage({
   required context,
-  required String image
-}) => navigateTo(context, OpenImageScreen(image: image));
+  // required String image
+  required ImageProvider imageProvider
+}) => navigateTo(context, OpenImageScreen(imageProvider: imageProvider));
 
 Future navigateTo(context, nextScreen) => Navigator.push(context, MaterialPageRoute(builder: (context) => nextScreen));
 
