@@ -8,6 +8,7 @@ import 'package:social_app/modules/login_screen/login_screen.dart';
 import 'package:social_app/shared/components/components.dart';
 import 'package:social_app/shared/components/constants.dart';
 import 'package:social_app/shared/network/local/chache%20_helper.dart';
+import 'package:social_app/shared/styles/colors.dart';
 import 'package:social_app/shared/styles/icon_broken.dart';
 
 import '../modules/new_post_screen/new_post_screen.dart';
@@ -50,20 +51,35 @@ class SocialLayoutScreen extends StatelessWidget {
                   ),
                 ],
               ),
+              floatingActionButton: FloatingActionButton(
+                onPressed: () {
+                  navigateTo(context, NewPostScreen());
+                },
+                tooltip: 'Add Post',
+                backgroundColor: defaultColor,
+                child: Icon(
+                  IconBroken.Paper_Plus,
+                  size: 30,
+                ),
+                // mini: true,
+              ),
+              floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
               bottomNavigationBar: BottomNavigationBar(
                 items: const [
                   BottomNavigationBarItem(
                     icon: Icon(IconBroken.Home),
                     label: 'Home',
+
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(IconBroken.Chat),
                     label: 'Chat',
                   ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.add_circle_outline),
-                    label: 'Post',
-                  ),
+
+                  // BottomNavigationBarItem(
+                  //   icon: Icon(Icons.add_circle_outline),
+                  //   label: 'Post',
+                  // ),
                   BottomNavigationBarItem(
                     icon: Icon(IconBroken.User),
                     label: 'Users',

@@ -292,7 +292,7 @@ Widget buildPostItem(context) => Card(
                 ),
               ),
               onTap: (){
-                openImage(context: context, image: 'https://img.freepik.com/free-photo/happy-smiling-millennial-girl-with-red-hair-holds-modern-cellular-enjoys-texting-social-media-uses-mobile-network-services-wears-blue-jumper-hat_273609-46497.jpg');
+                openImage(context: context, imageProvider: NetworkImage('https://img.freepik.com/free-photo/happy-smiling-millennial-girl-with-red-hair-holds-modern-cellular-enjoys-texting-social-media-uses-mobile-network-services-wears-blue-jumper-hat_273609-46497.jpg'));
               },
             ),
             const SizedBox(

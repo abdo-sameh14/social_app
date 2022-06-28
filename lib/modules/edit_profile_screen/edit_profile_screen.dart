@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/layout/cubit/social_cubit.dart';
 import 'package:social_app/shared/components/components.dart';
+import 'package:social_app/shared/components/constants.dart';
 import 'package:social_app/shared/styles/icon_broken.dart';
 
 import '../../layout/cubit/social_states.dart';
@@ -20,12 +23,14 @@ class EditProfileScreen extends StatelessWidget {
     return BlocConsumer<SocialCubit, SocialStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        var model = SocialCubit.get(context).model;
+        var model = SocialCubit.get(context).userModel;
         var cubit = SocialCubit.get(context);
         firstNameController.text = model!.firstName!;
         lastNameController.text = model.lastName!;
         bioController.text = model.bio!;
         phoneController.text = model.phone!;
+        File? profileImage = cubit.profileImage;
+        File? coverImage = cubit.coverImage;
         return Scaffold(
           appBar: defaultAppBar(
             context: context,
@@ -33,11 +38,19 @@ class EditProfileScreen extends StatelessWidget {
             action: [
               TextButton(
                 onPressed: (){
-                  cubit.updateUserData();
+                  cubit.updateUserData(
+                    firstName: firstNameController.text,
+                    lastName: lastNameController.text,
+                    bio: bioController.text,
+                    phone: phoneController.text,
+                  );
                 },
                 child: const Text(
                   'Update',
                 ),
+              ),
+              const SizedBox(
+                width: 15,
               ),
             ],
           ),
@@ -47,13 +60,19 @@ class EditProfileScreen extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-                  Stack(
+                  if(state is SocialUpdateUserDataLoadingState)
+                    const LinearProgressIndicator(),
+                  if(state is SocialUpdateUserDataLoadingState)
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Stack(
                     alignment: AlignmentDirectional.bottomCenter,
                     children: [
                       Padding(
                         padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 60),
                         child: Stack(
-                          alignment: AlignmentDirectional.bottomEnd,
+                          alignment: AlignmentDirectional.topEnd,
                           children: [
                             InkWell(
                               child: Container(
@@ -62,16 +81,15 @@ class EditProfileScreen extends StatelessWidget {
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(4),
                                     image: DecorationImage(
-                                        image: NetworkImage(
-                                            model.coverPic!
-                                        ),
+                                        image: coverImage == null ? NetworkImage(model.coverPic!) : FileImage(coverImage) as ImageProvider,
+                                        // coverImage == null ? NetworkImage(model.coverPic!) : FileImage(coverImage),
                                         fit: BoxFit.cover
                                     ),
                                     color: defaultColor
                                 ),
                               ),
                               onTap: (){
-                                openImage(context: context, image: model.coverPic!);
+                                openImage(context: context, imageProvider: coverImage == null ? NetworkImage(model.coverPic!) : FileImage(coverImage) as ImageProvider);
                               },
                             ),
                             Padding(
@@ -80,7 +98,9 @@ class EditProfileScreen extends StatelessWidget {
                                 radius: 22,
                                 backgroundColor: defaultColor,
                                 child: IconButton(
-                                    onPressed: (){},
+                                    onPressed: (){
+                                      cubit.getCoverImage();
+                                    },
                                     icon: const Icon(
                                       IconBroken.Camera,
                                       size: 26,
@@ -100,13 +120,11 @@ class EditProfileScreen extends StatelessWidget {
                               child: CircleAvatar(
                                 radius: 60,
                                 backgroundColor: defaultColor,
-                                backgroundImage: NetworkImage(
-                                    model.pic!
-                                ),
+                                backgroundImage: profileImage == null ? NetworkImage(model.pic!) : FileImage(profileImage) as ImageProvider
                               ),
                             ),
                             onTap: (){
-                              openImage(context: context, image: model.pic!);
+                              openImage(context: context, imageProvider: profileImage == null ? NetworkImage(model.pic!) : FileImage(profileImage) as ImageProvider);
                             },
                             // enableFeedback: true,
                           ),
@@ -114,7 +132,9 @@ class EditProfileScreen extends StatelessWidget {
                             radius: 18,
                             backgroundColor: defaultColor,
                             child: IconButton(
-                              onPressed: (){},
+                              onPressed: (){
+                                cubit.getProfileImage();
+                              },
                               icon: const Icon(
                                 IconBroken.Camera,
                                 size: 20,
@@ -126,6 +146,68 @@ class EditProfileScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(
+                    height: 30,
+                  ),
+                  if(profileImage != null || coverImage !=null)
+                  Row(
+                    children: [
+                      if(profileImage != null)
+                        Expanded(
+                          child: Column(
+                            children: [
+                              defaultButton(
+                                  function: (){
+                                    cubit.uploadProfileImage(
+                                      firstName: firstNameController.text,
+                                      lastName: lastNameController.text,
+                                      bio: bioController.text,
+                                      phone: phoneController.text,
+                                    );
+                                  },
+                                  text: 'Update Profile Image',
+                                  fontSize: 16
+                              ),
+                              if(state is SocialUploadProfileImageLoadingState)
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                              if(state is SocialUploadProfileImageLoadingState)
+                                const LinearProgressIndicator()
+                            ],
+                          ),
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      if(coverImage !=null)
+                        Expanded(
+                          child: Column(
+                            children: [
+                              defaultButton(
+                                  function: (){
+                                    cubit.uploadCoverImage(
+                                      firstName: firstNameController.text,
+                                      lastName: lastNameController.text,
+                                      bio: bioController.text,
+                                      phone: phoneController.text,
+                                    );
+                                  },
+                                  text: 'Update Cover Image',
+                                  fontSize: 16
+                              ),
+                              if(state is SocialUploadCoverImageLoadingState)
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                              if(state is SocialUploadCoverImageLoadingState)
+                                const LinearProgressIndicator()
+                            ],
+                          ),
+                      ),
+                    ],
+                  ),
+                  if(profileImage != null || coverImage !=null)
+                    const SizedBox(
                     height: 30,
                   ),
                   Row(
