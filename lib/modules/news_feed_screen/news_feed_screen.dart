@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/layout/cubit/social_cubit.dart';
 import 'package:social_app/layout/cubit/social_states.dart';
+import 'package:social_app/models/posts_model/post_model.dart';
 import 'package:social_app/shared/styles/icon_broken.dart';
 
+import '../../models/users_model/users_model.dart';
 import '../../shared/components/components.dart';
 import '../../shared/styles/colors.dart';
 
@@ -15,6 +17,8 @@ class NewsFeedScreen extends StatelessWidget {
     return BlocConsumer<SocialCubit, SocialStates>(
       listener: (context, state) {},
       builder: (context, state) {
+        var cubit = SocialCubit.get(context);
+        var posts = cubit.posts;
         return SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(
@@ -31,7 +35,7 @@ class NewsFeedScreen extends StatelessWidget {
                         'https://img.freepik.com/free-photo/beautiful-asian-woman-uses-smartphone-app-sends-messages-social-media-chat-points-away-copy-space-wears-casual-jumper_273609-48643.jpg',
                       ),
                       fit: BoxFit.cover,
-                      height: 220,
+                      height: 250,
                       width: double.infinity,
                     ),
                     Text(
@@ -49,11 +53,11 @@ With Friends
               ListView.separated(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) => buildPostItem(context),
+                itemBuilder: (context, index) => buildPostItem(cubit.posts[index], context),
                 separatorBuilder: (context, index) => const SizedBox(
                   height: 8,
                 ),
-                itemCount: 10,
+                itemCount: posts.length,
               ),
             ],
           ),
@@ -64,20 +68,22 @@ With Friends
 
 
 }
-Widget buildPostItem(context) => Card(
+Widget buildPostItem(PostsModel model, context) => Card(
       margin: const EdgeInsets.symmetric(horizontal: 8),
       elevation: 3,
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 25,
                   backgroundImage: NetworkImage(
-                    'https://img.freepik.com/free-photo/happy-smiling-millennial-girl-with-red-hair-holds-modern-cellular-enjoys-texting-social-media-uses-mobile-network-services-wears-blue-jumper-hat_273609-46497.jpg',
+                    model.pic!
+                    // 'https://img.freepik.com/free-photo/happy-smiling-millennial-girl-with-red-hair-holds-modern-cellular-enjoys-texting-social-media-uses-mobile-network-services-wears-blue-jumper-hat_273609-46497.jpg',
                   ),
                 ),
                 const SizedBox(
@@ -91,7 +97,7 @@ Widget buildPostItem(context) => Card(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'Abdo Sameh',
+                            '${model.firstName!} ${model.lastName!}',
                             style:
                             Theme.of(context).textTheme.bodyText1?.copyWith(
                                 height: 1
@@ -111,7 +117,7 @@ Widget buildPostItem(context) => Card(
                         height: 5,
                       ),
                       Text(
-                        'Fri, Jun 24, at 7:00 pm',
+                        model.postDateTime!,
                         style: Theme.of(context).textTheme.caption,
                       ),
                     ],
@@ -135,11 +141,15 @@ Widget buildPostItem(context) => Card(
               ),
             ),
             Text(
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+              model.postText ?? '',
+              // 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
               style: Theme.of(context)
                   .textTheme
                   .bodyText2
                   ?.copyWith(fontWeight: FontWeight.normal),
+            ),
+            const SizedBox(
+              height: 5,
             ),
             SizedBox(
               width: double.infinity,
@@ -277,27 +287,30 @@ Widget buildPostItem(context) => Card(
             const SizedBox(
               height: 10,
             ),
-            InkWell(
+            if(model.postImage != null)
+              InkWell(
               child: Container(
                 height: 200,
                 width: double.infinity,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
-                    image: const DecorationImage(
+                    image: DecorationImage(
                         image: NetworkImage(
-                          'https://img.freepik.com/free-photo/happy-smiling-millennial-girl-with-red-hair-holds-modern-cellular-enjoys-texting-social-media-uses-mobile-network-services-wears-blue-jumper-hat_273609-46497.jpg',
+                          model.postImage!
+                          // 'https://img.freepik.com/free-photo/happy-smiling-millennial-girl-with-red-hair-holds-modern-cellular-enjoys-texting-social-media-uses-mobile-network-services-wears-blue-jumper-hat_273609-46497.jpg',
                         ),
                         fit: BoxFit.cover
                     )
                 ),
               ),
               onTap: (){
-                openImage(context: context, imageProvider: NetworkImage('https://img.freepik.com/free-photo/happy-smiling-millennial-girl-with-red-hair-holds-modern-cellular-enjoys-texting-social-media-uses-mobile-network-services-wears-blue-jumper-hat_273609-46497.jpg'));
+                openImage(context: context, imageProvider: NetworkImage(model.postImage!));
               },
             ),
-            const SizedBox(
+            if(model.postImage != null)
+              const SizedBox(
               height: 10,
-            ),
+              ),
             Row(
               children: [
                 InkWell(
@@ -312,7 +325,7 @@ Widget buildPostItem(context) => Card(
                         width: 5,
                       ),
                       Text(
-                        '200',
+                        '0',
                         style: Theme.of(context).textTheme.caption?.copyWith(
                             fontWeight: FontWeight.bold,
                             height: 1.5
@@ -335,7 +348,7 @@ Widget buildPostItem(context) => Card(
                         width: 5,
                       ),
                       Text(
-                        '200 Comments',
+                        '0 Comments',
                         style: Theme.of(context).textTheme.caption?.copyWith(
                             fontWeight: FontWeight.bold,
                             height: 1.5
@@ -357,10 +370,11 @@ Widget buildPostItem(context) => Card(
             ),
             Row(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 18,
                   backgroundImage: NetworkImage(
-                    'https://img.freepik.com/free-photo/happy-smiling-millennial-girl-with-red-hair-holds-modern-cellular-enjoys-texting-social-media-uses-mobile-network-services-wears-blue-jumper-hat_273609-46497.jpg',
+                    SocialCubit.get(context).userModel!.pic!
+                    // 'https://img.freepik.com/free-photo/happy-smiling-millennial-girl-with-red-hair-holds-modern-cellular-enjoys-texting-social-media-uses-mobile-network-services-wears-blue-jumper-hat_273609-46497.jpg',
                   ),
                 ),
                 const SizedBox(

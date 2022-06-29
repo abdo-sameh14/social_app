@@ -4,7 +4,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:social_app/modules/open_image/open_image.dart';
 import 'package:social_app/shared/styles/colors.dart';
 import 'package:social_app/shared/styles/icon_broken.dart';
-import '../../layout/home_screen/home_cubit.dart';
 
 
 Widget mySeparator() =>Container(

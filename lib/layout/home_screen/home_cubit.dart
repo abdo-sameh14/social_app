@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../layout/home_screen/home_states.dart';
-import '../../shared/components/constants.dart';
-import '../../shared/network/end_points.dart';
-import '../../shared/network/remote/dio_helper.dart';
 
 class HomeScreenCubit extends Cubit<HomeScreenStates> {
   HomeScreenCubit() : super(HomeScreenInitialState());

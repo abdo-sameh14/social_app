@@ -1,20 +1,17 @@
 import 'dart:io';
 
-import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_app/layout/cubit/social_states.dart';
-import 'package:social_app/models/users_model.dart';
+import 'package:social_app/models/posts_model/post_model.dart';
+import 'package:social_app/models/users_model/users_model.dart';
 import 'package:social_app/modules/chats_screen/chat_screen.dart';
-import 'package:social_app/modules/new_post_screen/new_post_screen.dart';
 import 'package:social_app/modules/news_feed_screen/news_feed_screen.dart';
 import 'package:social_app/modules/settings_screen/settings_screen.dart';
 import 'package:social_app/modules/users_screen/users_screen.dart';
-import 'package:social_app/shared/components/components.dart';
 
 import '../../shared/components/constants.dart';
 
@@ -24,6 +21,8 @@ class SocialCubit extends Cubit<SocialStates> {
   static SocialCubit get(context) => BlocProvider.of(context);
 
   UsersModel? userModel;
+
+  PostsModel? postModel;
 
   void getUserData() {
     emit(SocialGetUserDataLoadingState());
@@ -101,6 +100,20 @@ class SocialCubit extends Cubit<SocialStates> {
     }
   }
 
+  File? postImage;
+
+  Future<void> getPostImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if(pickedFile != null){
+      postImage = File(pickedFile.path);
+      emit(SocialPickedPostImageSuccessState());
+    }
+    else{
+      print('No Image Selected');
+      emit(SocialPickedPostImageErrorState());
+    }
+  }
+
 
   void uploadProfileImage(
       {
@@ -115,13 +128,12 @@ class SocialCubit extends Cubit<SocialStates> {
   {
     emit(SocialUploadProfileImageLoadingState());
 
-    firebase_storage.FirebaseStorage.instance.ref()
+    FirebaseStorage.instance.ref()
         .child('Users/${Uri.file(profileImage!.path).pathSegments.last}')
         .putFile(profileImage!)
         .then((value){
           value.ref.getDownloadURL().then((value) {
             print('url: $value');
-            if(value != null){
               updateUserData(firstName: firstName,
                   lastName: lastName,
                   pic: value,
@@ -129,7 +141,6 @@ class SocialCubit extends Cubit<SocialStates> {
                   phone: phone,
               );
               emit(SocialUploadProfileImageSuccessState());
-            }
           }).catchError((error){
             emit(SocialUploadProfileImageErrorState());
           });
@@ -153,11 +164,10 @@ class SocialCubit extends Cubit<SocialStates> {
   {
     emit(SocialUploadCoverImageLoadingState());
 
-    firebase_storage.FirebaseStorage.instance.ref().child('Users/${Uri.file(coverImage!.path).pathSegments.last}')
+    FirebaseStorage.instance.ref().child('Users/${Uri.file(coverImage!.path).pathSegments.last}')
         .putFile(coverImage!)
         .then((value){
       value.ref.getDownloadURL().then((value) {
-        if(value !=null){
           updateUserData(firstName: firstName,
               lastName: lastName,
               coverPic: value,
@@ -165,14 +175,88 @@ class SocialCubit extends Cubit<SocialStates> {
               phone: phone,
           );
           emit(SocialUploadCoverImageSuccessState());
-        }
-
       }).catchError((error){
         emit(SocialUploadCoverImageErrorState());
       });
     }).catchError((error){
       print('error: ${error.toString()}');
       emit(SocialUploadCoverImageErrorState());
+    });
+  }
+
+  Future<void> uploadPostImage(
+      {
+        required String dateTime,
+        required String postText,
+        String? postPic,
+      }
+      )
+  async {
+    emit(SocialAddNewPostLoadingState());
+
+    FirebaseStorage.instance.ref().child('Posts/${Uri.file(postImage!.path).pathSegments.last}')
+        .putFile(postImage!)
+        .then((value){
+      value.ref.getDownloadURL().then((value) {
+        addNewPost(
+          dateTime: dateTime,
+          postText: postText,
+          postPic: value
+        );
+      }).catchError((error){
+        emit(SocialUploadPostImageErrorState());
+      });
+    }).catchError((error){
+      print('error: ${error.toString()}');
+      emit(SocialUploadCoverImageErrorState());
+    });
+  }
+
+  Future<void> addNewPost({
+    required String dateTime,
+    required String postText,
+    String? postPic,
+  }) async {
+    emit(SocialAddNewPostLoadingState());
+
+    PostsModel model = PostsModel(
+      firstName: userModel!.firstName,
+      lastName: userModel!.lastName,
+      postText: postText,
+      postDateTime: dateTime,
+      pic: userModel!.pic,
+      postImage: postPic,
+      uId: uId,
+    );
+    FirebaseFirestore.instance
+        .collection('Posts')
+        .add(model.toMap())
+        .then((value) {
+          emit(SocialAddNewPostSuccessState());
+    }).catchError((error){
+      emit(SocialAddNewPostErrorState());
+    });
+  }
+
+  void removePostImage(){
+
+    postImage = null;
+    emit(SocialRemovePostImage());
+  }
+
+  List posts = [];
+
+  void getPosts(){
+    emit(SocialGetPostsLoadingState());
+    FirebaseFirestore.instance
+        .collection('Posts')
+        .get().then((value) {
+        for (var element in value.docs) {
+          posts.add(PostsModel.fromJson(element.data()));
+        }
+        emit(SocialGetPostsSuccessState());
+    }).catchError((error){
+      emit(SocialGetPostsErrorState(error.toString()));
     });
   }
 
