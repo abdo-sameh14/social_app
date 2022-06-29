@@ -1,12 +1,9 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/layout/cubit/social_cubit.dart';
 import 'package:social_app/shared/components/components.dart';
-import 'package:social_app/shared/components/constants.dart';
 import 'package:social_app/shared/styles/icon_broken.dart';
-
 import '../../layout/cubit/social_states.dart';
 import '../../shared/styles/colors.dart';
 

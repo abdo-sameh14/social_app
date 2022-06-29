@@ -6,8 +6,6 @@ import 'package:social_app/layout/social_layout.dart';
 import 'package:social_app/shared/network/local/chache%20_helper.dart';
 import 'firebase_options.dart';
 import 'layout/cubit/social_states.dart';
-import 'layout/home_screen/home_cubit.dart';
-import 'layout/home_screen/home_states.dart';
 import 'modules/login_screen/login_screen.dart';
 import 'modules/onBoarding_screen/onBoarding_screen.dart';
 import 'shared/components/constants.dart';
@@ -55,7 +53,7 @@ void main(context) async {
 class MyApp extends StatelessWidget {
   final bool? isDark;
   final Widget? startWidget;
-  MyApp({this.isDark, this.startWidget});
+  const MyApp({Key? key, this.isDark, this.startWidget}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -66,7 +64,7 @@ class MyApp extends StatelessWidget {
         //   create: (BuildContext context) => HomeScreenCubit(),
         // ),
         BlocProvider(
-          create: (BuildContext context) => SocialCubit()..getUserData(),
+          create: (BuildContext context) => SocialCubit()..getUserData()..getPosts(),
         ),
       ],
       child: BlocConsumer<SocialCubit, SocialStates>(

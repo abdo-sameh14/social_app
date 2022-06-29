@@ -39,7 +39,7 @@ ThemeData lightTheme = ThemeData(
         height: 1.3,
       ),
       bodyText2: TextStyle(
-        fontSize: 14,
+        fontSize: 16,
         fontWeight: FontWeight.w600,
         color: Colors.black,
         height: 1.3,
