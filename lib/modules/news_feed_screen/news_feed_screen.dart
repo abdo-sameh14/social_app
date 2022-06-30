@@ -18,8 +18,10 @@ class NewsFeedScreen extends StatelessWidget {
       builder: (context, state) {
         var cubit = SocialCubit.get(context);
         var posts = cubit.posts;
+        var likes = cubit.likes;
+        var comments = cubit.comments;
         return ConditionalBuilder(
-            condition: posts.isNotEmpty && cubit.userModel != null,
+            condition: posts.isNotEmpty && likes.isNotEmpty && comments.isNotEmpty && cubit.userModel != null,
             builder: (context) => SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: Column(
@@ -353,7 +355,9 @@ Widget buildPostItem(PostsModel model, context, index) {
                         width: 5,
                       ),
                       Text(
-                        '0 Comments',
+
+                        // '0 comments',
+                        '${SocialCubit.get(context).comments[index] ?? 0} comments',
                         style: Theme.of(context).textTheme.caption?.copyWith(
                             fontWeight: FontWeight.bold,
                             height: 1.5
@@ -389,8 +393,12 @@ Widget buildPostItem(PostsModel model, context, index) {
                   child: TextFormField(
                     controller: commentController,
                     decoration:  InputDecoration(
-                      hintText: 'write a comment...'
+                      hintText: 'write a comment...',
+                      border: InputBorder.none
                     ),
+                    onFieldSubmitted: (value){
+                      SocialCubit.get(context).postComment(SocialCubit.get(context).postsId[index], value);
+                    },
                   ),
                   // InkWell(
                   //   child: Padding(
@@ -405,16 +413,20 @@ Widget buildPostItem(PostsModel model, context, index) {
                 ),
                 IconButton(
                   onPressed: (){
-                    if(SocialCubit.get(context).isLiked){
-                      SocialCubit.get(context).postDisLike(SocialCubit.get(context).postsId[index]);
-                    }else if(!SocialCubit.get(context).isLiked){
-                      SocialCubit.get(context).postLike(SocialCubit.get(context).postsId[index]);
-                    }
+                    SocialCubit.get(context).postLike(SocialCubit.get(context).postsId[index]);
+                    // SocialCubit.get(context).test(SocialCubit.get(context).postsId[index]);
+                    // if(SocialCubit.get(context).isLiked){
+                    //   SocialCubit.get(context).postDisLike(SocialCubit.get(context).postsId[index]);
+                    // }else if(!SocialCubit.get(context).isLiked){
+                    //   SocialCubit.get(context).postLike(SocialCubit.get(context).postsId[index]);
+                    // }
                     //SocialCubit.get(context).isLiked ? SocialCubit.get(context).postDisLike(SocialCubit.get(context).postsId[index]);
                   },
                   icon: Icon(
                     IconBroken.Heart,
-                    // color: SocialCubit.get(context).likeColor,
+                    // color:  Colors.black,
+                    // SocialCubit.get(context).isLiked[SocialCubit.get(context).postsId[index]]! ? Colors.red : Colors.black
+
                   ),
                 ),
               ],
