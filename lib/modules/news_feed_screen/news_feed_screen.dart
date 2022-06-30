@@ -1,11 +1,10 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/layout/cubit/social_cubit.dart';
 import 'package:social_app/layout/cubit/social_states.dart';
 import 'package:social_app/models/posts_model/post_model.dart';
 import 'package:social_app/shared/styles/icon_broken.dart';
-
-import '../../models/users_model/users_model.dart';
 import '../../shared/components/components.dart';
 import '../../shared/styles/colors.dart';
 
@@ -19,48 +18,52 @@ class NewsFeedScreen extends StatelessWidget {
       builder: (context, state) {
         var cubit = SocialCubit.get(context);
         var posts = cubit.posts;
-        return SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              Card(
-                margin: const EdgeInsets.all(8),
-                elevation: 5,
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                child: Stack(
-                  alignment: AlignmentDirectional.centerEnd,
-                  children: [
-                    const Image(
-                      image: NetworkImage(
-                        'https://img.freepik.com/free-photo/beautiful-asian-woman-uses-smartphone-app-sends-messages-social-media-chat-points-away-copy-space-wears-casual-jumper_273609-48643.jpg',
+        return ConditionalBuilder(
+            condition: posts.isNotEmpty && cubit.userModel != null,
+            builder: (context) => SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                Card(
+                  margin: const EdgeInsets.all(8),
+                  elevation: 5,
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  child: Stack(
+                    alignment: AlignmentDirectional.centerEnd,
+                    children: [
+                      const Image(
+                        image: NetworkImage(
+                          'https://img.freepik.com/free-photo/beautiful-asian-woman-uses-smartphone-app-sends-messages-social-media-chat-points-away-copy-space-wears-casual-jumper_273609-48643.jpg',
+                        ),
+                        fit: BoxFit.cover,
+                        height: 250,
+                        width: double.infinity,
                       ),
-                      fit: BoxFit.cover,
-                      height: 250,
-                      width: double.infinity,
-                    ),
-                    Text(
-                      '''Communicate
+                      Text(
+                        '''Communicate
 With Friends        
 ''',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                        // color: Colors.white,
-                          fontSize: 22),
-                    )
-                  ],
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                          // color: Colors.white,
+                            fontSize: 22),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              ListView.separated(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) => buildPostItem(cubit.posts[index], context),
-                separatorBuilder: (context, index) => const SizedBox(
-                  height: 8,
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) => buildPostItem(cubit.posts[index], context, index),
+                  separatorBuilder: (context, index) => const SizedBox(
+                    height: 8,
+                  ),
+                  itemCount: posts.length,
                 ),
-                itemCount: posts.length,
-              ),
-            ],
+              ],
+            ),
           ),
+            fallback: (context) => const Center(child: CircularProgressIndicator())
         );
       },
     );
@@ -68,7 +71,9 @@ With Friends
 
 
 }
-Widget buildPostItem(PostsModel model, context) => Card(
+Widget buildPostItem(PostsModel model, context, index) {
+  TextEditingController commentController = TextEditingController();
+  return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8),
       elevation: 3,
       clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -325,7 +330,7 @@ Widget buildPostItem(PostsModel model, context) => Card(
                         width: 5,
                       ),
                       Text(
-                        '0',
+                        '${SocialCubit.get(context).likes[index]}',
                         style: Theme.of(context).textTheme.caption?.copyWith(
                             fontWeight: FontWeight.bold,
                             height: 1.5
@@ -381,21 +386,35 @@ Widget buildPostItem(PostsModel model, context) => Card(
                   width: 8,
                 ),
                 Expanded(
-                  child: InkWell(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                      child: Text(
-                        'write a comment...',
-                        style: Theme.of(context).textTheme.caption,
-                      ),
+                  child: TextFormField(
+                    controller: commentController,
+                    decoration:  InputDecoration(
+                      hintText: 'write a comment...'
                     ),
-                    onTap: (){},
                   ),
+                  // InkWell(
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.symmetric(vertical: 15),
+                  //     child: Text(
+                  //       'write a comment...',
+                  //       style: Theme.of(context).textTheme.caption,
+                  //     ),
+                  //   ),
+                  //   onTap: (){},
+                  // ),
                 ),
                 IconButton(
-                  onPressed: (){},
-                  icon: const Icon(
+                  onPressed: (){
+                    if(SocialCubit.get(context).isLiked){
+                      SocialCubit.get(context).postDisLike(SocialCubit.get(context).postsId[index]);
+                    }else if(!SocialCubit.get(context).isLiked){
+                      SocialCubit.get(context).postLike(SocialCubit.get(context).postsId[index]);
+                    }
+                    //SocialCubit.get(context).isLiked ? SocialCubit.get(context).postDisLike(SocialCubit.get(context).postsId[index]);
+                  },
+                  icon: Icon(
                     IconBroken.Heart,
+                    // color: SocialCubit.get(context).likeColor,
                   ),
                 ),
               ],
@@ -403,4 +422,5 @@ Widget buildPostItem(PostsModel model, context) => Card(
           ],),
       ),
     );
+}
 

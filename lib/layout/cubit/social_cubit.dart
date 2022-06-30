@@ -246,17 +246,74 @@ class SocialCubit extends Cubit<SocialStates> {
 
   List posts = [];
 
+  List postsId = [];
+
+  List likes = [];
+
   void getPosts(){
-    emit(SocialGetPostsLoadingState());
+    // emit(SocialGetPostsLoadingState());
     FirebaseFirestore.instance
         .collection('Posts')
         .get().then((value) {
         for (var element in value.docs) {
-          posts.add(PostsModel.fromJson(element.data()));
+          element.reference.collection('likes').get().then((value) {
+            likes.add(value.docs.length);
+            postsId.add(element.id);
+            posts.add(PostsModel.fromJson(element.data()));
+          }).catchError((error){});
+
         }
         emit(SocialGetPostsSuccessState());
     }).catchError((error){
       emit(SocialGetPostsErrorState(error.toString()));
+    });
+  }
+
+  // Color likeColor = Colors.black;
+  bool isLiked = false;
+
+  void togglePostsLikeAndDislike(String postId){
+    // posts[index][likes];
+    isLiked = !isLiked;
+    // if(isLiked){
+    //   likeColor = Colors.red;
+    // } else{
+    //   likeColor = Colors.black;
+    // }
+    emit(SocialChangePostLikeState());
+  }
+
+  void postLike(String postId){
+    togglePostsLikeAndDislike(postId);
+    FirebaseFirestore.instance
+        .collection('Posts')
+        .doc(postId)
+        .collection('likes')
+        .doc(uId)
+        .set({
+      'like': true
+    })
+        .then((value) {
+          getPosts();
+          emit(SocialLikePostSuccessState());
+    }).catchError((error){
+      emit(SocialLikePostErrorState());
+    });
+  }
+
+  void postDisLike(String postId){
+    togglePostsLikeAndDislike(postId);
+    FirebaseFirestore.instance
+        .collection('Posts')
+        .doc(postId)
+        .collection('likes')
+        .doc(uId)
+        .delete()
+        .then((value) {
+          getPosts();
+      emit(SocialLikePostSuccessState());
+    }).catchError((error){
+      emit(SocialLikePostErrorState());
     });
   }
 

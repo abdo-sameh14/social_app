@@ -68,6 +68,12 @@ class SocialAddNewPostSuccessState extends SocialStates{}
 
 class SocialAddNewPostErrorState extends SocialStates{}
 
+class SocialLikePostSuccessState extends SocialStates{}
+
+class SocialLikePostErrorState extends SocialStates{}
+
+class SocialChangePostLikeState extends SocialStates{}
+
 class SocialRemovePostImage extends SocialStates{}
 
 class SocialChangeBotNavBarState extends SocialStates{}
