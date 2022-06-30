@@ -18,6 +18,8 @@ class NewPostScreen extends StatelessWidget {
       listener: (context, state) {
         if(state is SocialAddNewPostSuccessState){
           showToast(msg: 'Post Added Successfully', state: ToastStates.success);
+          Navigator.pop(context);
+          SocialCubit.get(context).removePostImage();
         }
       },
       builder: (context, state) {
@@ -37,11 +39,12 @@ class NewPostScreen extends StatelessWidget {
                 onPressed: ()async{
                  cubit.postImage == null ?
                  cubit.addNewPost(dateTime: now.toString(), postText: postController.text).then((value) {
-                 cubit.getPosts();
+                 // cubit.getPosts();
                  })
                       : cubit.uploadPostImage(dateTime: now.toString(), postText: postController.text).then((value) {
-                   cubit.getPosts();
+                   // cubit.getPosts();
                  });
+
                 },
                 child: const Text(
                   'Post',

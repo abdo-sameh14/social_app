@@ -232,6 +232,8 @@ class SocialCubit extends Cubit<SocialStates> {
         .collection('Posts')
         .add(model.toMap())
         .then((value) {
+          // FirebaseFirestore.instance.collection('Posts').doc(postId).collection('like').doc(uId).set(
+          //     {'like': false});
           emit(SocialAddNewPostSuccessState());
     }).catchError((error){
       emit(SocialAddNewPostErrorState());
@@ -246,19 +248,154 @@ class SocialCubit extends Cubit<SocialStates> {
 
   List posts = [];
 
+  List postsId = [];
+
+  List likes = [];
+
+  List comments = [];
+
+  // Map<String, bool> isLiked = {};
+
+  // bool isLiked = false;
+
   void getPosts(){
-    emit(SocialGetPostsLoadingState());
+    // emit(SocialGetPostsLoadingState());
     FirebaseFirestore.instance
         .collection('Posts')
         .get().then((value) {
         for (var element in value.docs) {
-          posts.add(PostsModel.fromJson(element.data()));
+
+
+          // isLiked.addAll({element.id: false});
+          element.reference.collection('comments').get().then((value) {
+            emit(SocialGetCommentsLoadingState());
+            comments.add(value.docs.length);
+            // value.docs.forEach((element) {
+            //   element.reference.get().then((value) {
+            //     print('Value: ${value.data()?.length}');
+            //     comments.add(value.data()?.length);
+            //   });
+            // });
+            element.reference.collection('likes').get().then((value) {
+              emit(SocialGetLikesLoadingState());
+              likes.add(value.docs.length);
+              postsId.add(element.id);
+              posts.add(PostsModel.fromJson(element.data()));
+              emit(SocialGetLikesSuccessState());
+
+              // value.docs.forEach((e) {
+              //   isLiked.addAll({}
+              //     // element.id : e.data()[1]
+              //     // e.data()
+              //   );
+              //   print('isLiked: ${e.data}');
+              // });
+            }).catchError((error){
+              emit(SocialGetLikesErrorState(error.toString()));
+            });
+            emit(SocialGetCommentsSuccessState());
+          }).catchError((error){
+            emit(SocialGetCommentsErrorState(error.toString()));
+
+          });
+
         }
+
         emit(SocialGetPostsSuccessState());
     }).catchError((error){
       emit(SocialGetPostsErrorState(error.toString()));
     });
   }
+
+  // void getLikes(){
+  //   // emit(SocialGetPostsLoadingState());
+  //   FirebaseFirestore.instance
+  //       .collection('Posts').get().then((value) {
+  //         value.docs.forEach((element) {
+  //           element.reference.collection('likes').
+  //         })
+  //   }).catchError((error){});
+  //
+  // }
+
+  // List<Map<String, Color>> likeColor = [];
+
+
+    // postsId.
+
+  // void test(postId){
+  //   // FirebaseFirestore.instance.collection('Posts').doc(postId).collection('likes')
+  //   postsId.forEach((element) {
+  //     isLiked.addAll({
+  //       element: false
+  //     });
+  //     });
+  //   print(isLiked);
+  // }
+  
+  // void togglePostsLikeAndDislike(String postId, index){
+  //   isLiked = !isLiked;
+  //   if(isLiked){
+  //     likeColor[index][postId] = Colors.red;
+  //   } else{
+  //     likeColor[index][postId] = Colors.black;
+  //   }
+  //   emit(SocialChangePostLikeState());
+  // }
+
+  void postLike(String postId){
+    // isLiked = !isLiked;
+    // togglePostsLikeAndDislike(postId, index);
+    FirebaseFirestore.instance
+        .collection('Posts')
+        .doc(postId)
+        .collection('likes')
+        .doc(uId)
+        .set({
+      'like': true
+    })
+        .then((value) {
+          emit(SocialLikePostSuccessState());
+    }).catchError((error){
+      emit(SocialLikePostErrorState());
+    });
+  }
+
+  void postComment(String postId, String comment){
+    // isLiked = !isLiked;
+    // togglePostsLikeAndDislike(postId, index);
+    FirebaseFirestore.instance
+        .collection('Posts')
+        .doc(postId)
+        .collection('comments')
+        .doc(uId)
+        .update({
+      '${DateTime.now()}': comment
+    })
+        .then((value) {
+      emit(SocialCommentPostSuccessState());
+    }).catchError((error){
+      emit(SocialCommentPostErrorState());
+    });
+  }
+
+  // void postDisLike(String postId){
+  //   isLiked = !isLiked;
+  //   // togglePostsLikeAndDislike(postId, index);
+  //   FirebaseFirestore.instance
+  //       .collection('Posts')
+  //       .doc(postId)
+  //       .collection('likes')
+  //       .doc(uId)
+  //       .set({
+  //     'like': false
+  //       })
+  //       .then((value) {
+  //     emit(SocialLikePostSuccessState());
+  //   }).catchError((error){
+  //     emit(SocialLikePostErrorState());
+  //   });
+  // }
 
   int currentIndex = 0;
 
