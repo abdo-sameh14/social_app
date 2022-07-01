@@ -20,6 +20,7 @@ class NewPostScreen extends StatelessWidget {
           showToast(msg: 'Post Added Successfully', state: ToastStates.success);
           Navigator.pop(context);
           SocialCubit.get(context).removePostImage();
+          SocialCubit.get(context).getPosts();
         }
       },
       builder: (context, state) {
