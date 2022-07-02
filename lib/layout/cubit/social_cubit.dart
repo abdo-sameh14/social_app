@@ -254,12 +254,15 @@ class SocialCubit extends Cubit<SocialStates> {
 
   List comments = [];
 
+  List<UsersModel> users = [];
+
   // Map<String, bool> isLiked = {};
 
   // bool isLiked = false;
 
   void getPosts(){
-    // emit(SocialGetPostsLoadingState());
+    posts = [];
+    emit(SocialGetPostsLoadingState());
     FirebaseFirestore.instance
         .collection('Posts')
         .get().then((value) {
@@ -304,6 +307,25 @@ class SocialCubit extends Cubit<SocialStates> {
         emit(SocialGetPostsSuccessState());
     }).catchError((error){
       emit(SocialGetPostsErrorState(error.toString()));
+    });
+  }
+
+  void getUsers(){
+    users = [];
+    emit(SocialGetUsersLoadingState());
+    FirebaseFirestore.instance
+        .collection('Users')
+        .get().then((value) {
+      for (var element in value.docs) {
+        if(element.data()['uId'] != uId) {
+          users.add(UsersModel.fromJson(element.data()));
+        }
+
+      }
+
+      emit(SocialGetUsersSuccessState());
+    }).catchError((error){
+      emit(SocialGetUsersErrorState(error.toString()));
     });
   }
 
@@ -400,6 +422,12 @@ class SocialCubit extends Cubit<SocialStates> {
   int currentIndex = 0;
 
   void changeBotNavBar(index){
+    if(index == 1){
+      getUsers();
+    }
+    if(index == 0){
+      getPosts();
+    }
       currentIndex = index;
       emit(SocialChangeBotNavBarState());
 
