@@ -3,6 +3,7 @@ class ChatModel{
   String? receiverId;
   String? msgDateTime;
   String? msgText;
+  String? msgPic;
 
 
   ChatModel({
@@ -10,6 +11,7 @@ class ChatModel{
     this.receiverId,
     this.msgDateTime,
     this.msgText,
+    this.msgPic,
 
   });
 
@@ -18,6 +20,7 @@ class ChatModel{
     receiverId = json['receiverId'];
     msgDateTime = json['msgDateTime'];
     msgText = json['msgText'];
+    msgPic = json['msgPic'];
 
   }
 
@@ -27,6 +30,7 @@ class ChatModel{
       'receiverId': receiverId,
       'msgDateTime': msgDateTime,
       'msgText': msgText,
+      'msgPic': msgPic,
 
     };
   }
