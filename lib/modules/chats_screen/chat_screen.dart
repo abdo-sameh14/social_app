@@ -22,11 +22,16 @@ class ChatScreen extends StatelessWidget {
         List users = cubit.users;
         return ConditionalBuilder(
           condition: users.isNotEmpty,
-          builder: (context) => ListView.separated(
-              physics: const BouncingScrollPhysics(),
-              itemBuilder: (context, index) => buildChatItem(context, users[index]),
-              separatorBuilder: (context, index) => mySeparator(),
-              itemCount: users.length),
+          builder: (context) => RefreshIndicator(
+            onRefresh: () {
+              return cubit.getUsers();
+            },
+            child: ListView.separated(
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: (context, index) => buildChatItem(context, users[index]),
+                separatorBuilder: (context, index) => mySeparator(),
+                itemCount: users.length),
+          ),
           fallback: (context) => const Center(child: CircularProgressIndicator()),
         );
       },

@@ -299,7 +299,7 @@ class SocialCubit extends Cubit<SocialStates> {
 
   // bool isLiked = false;
 
-  void getPosts(){
+  Future getPosts() async {
     posts = [];
     emit(SocialGetPostsLoadingState());
     FirebaseFirestore.instance
@@ -349,7 +349,7 @@ class SocialCubit extends Cubit<SocialStates> {
     });
   }
 
-  void getUsers(){
+  Future getUsers() async {
     users = [];
     emit(SocialGetUsersLoadingState());
     FirebaseFirestore.instance
@@ -464,9 +464,9 @@ class SocialCubit extends Cubit<SocialStates> {
     if(index == 1){
       getUsers();
     }
-    if(index == 0){
-      getPosts();
-    }
+    // if(index == 0){
+    //   getPosts();
+    // }
       currentIndex = index;
       emit(SocialChangeBotNavBarState());
 
