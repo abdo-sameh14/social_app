@@ -113,3 +113,11 @@ class SocialRemovePostImage extends SocialStates{}
 class SocialChangeBotNavBarState extends SocialStates{}
 
 class SocialAddPostState extends SocialStates{}
+
+class SocialSendMsgSuccessState extends SocialStates{}
+
+class SocialSendMsgErrorState extends SocialStates{}
+
+class SocialGetMsgsSuccessState extends SocialStates{}
+
+class SocialGetMsgsErrorState extends SocialStates{}
