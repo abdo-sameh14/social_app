@@ -23,7 +23,6 @@ class SocialCubit extends Cubit<SocialStates> {
 
   UsersModel? userModel;
 
-  PostsModel? postModel;
 
   void getUserData() {
     emit(SocialGetUserDataLoadingState());
@@ -113,6 +112,48 @@ class SocialCubit extends Cubit<SocialStates> {
       print('No Image Selected');
       emit(SocialPickedPostImageErrorState());
     }
+  }
+
+  File? chatImage;
+
+  Future<void> getChatImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if(pickedFile != null){
+      chatImage = File(pickedFile.path);
+      emit(SocialPickedChatImageSuccessState());
+    }
+    else{
+      print('No Image Selected');
+      emit(SocialPickedChatImageErrorState());
+    }
+  }
+
+  Future<void> uploadChatImage(
+      {
+        required String receiverId,
+        required String msgDateTime,
+        required String msgText,
+      }
+      )
+  async {
+    emit(SocialAddNewPostLoadingState());
+
+    FirebaseStorage.instance.ref().child('Users/Chat/${Uri.file(chatImage!.path).pathSegments.last}')
+        .putFile(chatImage!)
+        .then((value){
+      value.ref.getDownloadURL().then((value) {
+        sendMsg(
+            receiverId: receiverId,
+            msgDateTime: msgDateTime,
+            msgText: msgText,
+            chatPic: value);
+      }).catchError((error){
+        emit(SocialUploadPostImageErrorState());
+      });
+    }).catchError((error){
+      print('error: ${error.toString()}');
+      emit(SocialUploadCoverImageErrorState());
+    });
   }
 
 
@@ -209,7 +250,7 @@ class SocialCubit extends Cubit<SocialStates> {
       });
     }).catchError((error){
       print('error: ${error.toString()}');
-      emit(SocialUploadCoverImageErrorState());
+      emit(SocialUploadPostImageErrorState());
     });
   }
 
@@ -245,12 +286,14 @@ class SocialCubit extends Cubit<SocialStates> {
     required String receiverId,
     required String msgDateTime,
     required String msgText,
+    String? chatPic,
   }) async {
     ChatModel model = ChatModel(
       senderId: uId,
       receiverId: receiverId,
       msgDateTime: msgDateTime,
       msgText: msgText,
+      msgPic: chatPic
     );
     FirebaseFirestore.instance
         .collection('Users')
@@ -279,10 +322,41 @@ class SocialCubit extends Cubit<SocialStates> {
     });
   }
 
+  List<ChatModel> messages = [];
+
+  void getMessages({
+  required String receiverId
+}){
+    FirebaseFirestore.instance
+        .collection('Users')
+        .doc(uId)
+        .collection('Chats')
+        .doc(receiverId)
+        .collection('messages')
+        .orderBy('msgDateTime')
+        .snapshots()
+        .listen((event) {
+
+          messages = [];
+
+          for (var element in event.docs) {
+            messages.add(ChatModel.fromJson(element.data()));
+          }
+
+          emit(SocialGetMsgsSuccessState());
+    });
+  }
+
   void removePostImage(){
 
     postImage = null;
     emit(SocialRemovePostImage());
+  }
+
+  void removeChatImage(){
+
+    chatImage = null;
+    emit(SocialRemoveChatImage());
   }
 
   List posts = [];

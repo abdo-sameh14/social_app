@@ -22,13 +22,14 @@ class NewsFeedScreen extends StatelessWidget {
         var likes = cubit.likes;
         var comments = cubit.comments;
         return ConditionalBuilder(
-            condition: likes.isNotEmpty && comments.isNotEmpty && cubit.userModel != null,
-            // posts.isNotEmpty && likes.isNotEmpty && comments.isNotEmpty && cubit.userModel != null,
-            builder: (context) => LiquidPullToRefresh(
+            condition:
+            // likes.isNotEmpty && comments.isNotEmpty && cubit.userModel != null,
+            posts.isNotEmpty && likes.isNotEmpty && comments.isNotEmpty && cubit.userModel != null,
+            builder: (context) => RefreshIndicator(
               onRefresh: (){
                 return cubit.getPosts();
               },
-              showChildOpacityTransition: false,
+              // showChildOpacityTransition: false,
               color: defaultColor,
               backgroundColor: Colors.white,
               child: SingleChildScrollView(
@@ -75,7 +76,10 @@ With Friends
               ),
           ),
             ),
-            fallback: (context) => const Center(child: CircularProgressIndicator())
+            fallback: (context) => const Align(
+              alignment: Alignment.topCenter,
+              child: Center(child: CircularProgressIndicator()),
+            )
         );
       },
     );
@@ -402,7 +406,7 @@ Widget buildPostItem(PostsModel model, context, index) {
                 Expanded(
                   child: TextFormField(
                     controller: commentController,
-                    decoration:  InputDecoration(
+                    decoration:  const InputDecoration(
                       hintText: 'write a comment...',
                       border: InputBorder.none
                     ),
@@ -432,7 +436,7 @@ Widget buildPostItem(PostsModel model, context, index) {
                     // }
                     //SocialCubit.get(context).isLiked ? SocialCubit.get(context).postDisLike(SocialCubit.get(context).postsId[index]);
                   },
-                  icon: Icon(
+                  icon: const Icon(
                     IconBroken.Heart,
                     // color:  Colors.black,
                     // SocialCubit.get(context).isLiked[SocialCubit.get(context).postsId[index]]! ? Colors.red : Colors.black

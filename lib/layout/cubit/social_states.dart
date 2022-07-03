@@ -74,6 +74,10 @@ class SocialPickedPostImageSuccessState extends SocialStates{}
 
 class SocialPickedPostImageErrorState extends SocialStates{}
 
+class SocialPickedChatImageSuccessState extends SocialStates{}
+
+class SocialPickedChatImageErrorState extends SocialStates{}
+
 class SocialUploadProfileImageLoadingState extends SocialStates{}
 
 class SocialUploadProfileImageSuccessState extends SocialStates{}
@@ -98,6 +102,7 @@ class SocialAddNewPostSuccessState extends SocialStates{}
 
 class SocialAddNewPostErrorState extends SocialStates{}
 
+
 class SocialLikePostSuccessState extends SocialStates{}
 
 class SocialLikePostErrorState extends SocialStates{}
@@ -110,6 +115,8 @@ class SocialChangePostLikeState extends SocialStates{}
 
 class SocialRemovePostImage extends SocialStates{}
 
+class SocialRemoveChatImage extends SocialStates{}
+
 class SocialChangeBotNavBarState extends SocialStates{}
 
 class SocialAddPostState extends SocialStates{}
@@ -119,5 +126,3 @@ class SocialSendMsgSuccessState extends SocialStates{}
 class SocialSendMsgErrorState extends SocialStates{}
 
 class SocialGetMsgsSuccessState extends SocialStates{}
-
-class SocialGetMsgsErrorState extends SocialStates{}
