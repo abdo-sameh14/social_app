@@ -1,6 +1,7 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:social_app/layout/cubit/social_cubit.dart';
 import 'package:social_app/layout/cubit/social_states.dart';
 import 'package:social_app/models/posts_model/post_model.dart';
@@ -21,50 +22,59 @@ class NewsFeedScreen extends StatelessWidget {
         var likes = cubit.likes;
         var comments = cubit.comments;
         return ConditionalBuilder(
-            condition: posts.isNotEmpty && likes.isNotEmpty && comments.isNotEmpty && cubit.userModel != null,
-            builder: (context) => SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              children: [
-                Card(
-                  margin: const EdgeInsets.all(8),
-                  elevation: 5,
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  child: Stack(
-                    alignment: AlignmentDirectional.centerEnd,
-                    children: [
-                      const Image(
-                        image: NetworkImage(
-                          'https://img.freepik.com/free-photo/beautiful-asian-woman-uses-smartphone-app-sends-messages-social-media-chat-points-away-copy-space-wears-casual-jumper_273609-48643.jpg',
+            condition: likes.isNotEmpty && comments.isNotEmpty && cubit.userModel != null,
+            // posts.isNotEmpty && likes.isNotEmpty && comments.isNotEmpty && cubit.userModel != null,
+            builder: (context) => LiquidPullToRefresh(
+              onRefresh: (){
+                return cubit.getPosts();
+              },
+              showChildOpacityTransition: false,
+              color: defaultColor,
+              backgroundColor: Colors.white,
+              child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                children: [
+                  Card(
+                    margin: const EdgeInsets.all(8),
+                    elevation: 5,
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    child: Stack(
+                      alignment: AlignmentDirectional.centerEnd,
+                      children: [
+                        const Image(
+                          image: NetworkImage(
+                            'https://img.freepik.com/free-photo/beautiful-asian-woman-uses-smartphone-app-sends-messages-social-media-chat-points-away-copy-space-wears-casual-jumper_273609-48643.jpg',
+                          ),
+                          fit: BoxFit.cover,
+                          height: 250,
+                          width: double.infinity,
                         ),
-                        fit: BoxFit.cover,
-                        height: 250,
-                        width: double.infinity,
-                      ),
-                      Text(
-                        '''Communicate
+                        Text(
+                          '''Communicate
 With Friends        
 ''',
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                          // color: Colors.white,
-                            fontSize: 22),
-                      )
-                    ],
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                            // color: Colors.white,
+                              fontSize: 22),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) => buildPostItem(cubit.posts[index], context, index),
-                  separatorBuilder: (context, index) => const SizedBox(
-                    height: 8,
+                  ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) => buildPostItem(cubit.posts[index], context, index),
+                    separatorBuilder: (context, index) => const SizedBox(
+                      height: 8,
+                    ),
+                    itemCount: posts.length,
                   ),
-                  itemCount: posts.length,
-                ),
-              ],
-            ),
+                ],
+              ),
           ),
+            ),
             fallback: (context) => const Center(child: CircularProgressIndicator())
         );
       },
