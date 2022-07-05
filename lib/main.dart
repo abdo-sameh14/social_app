@@ -11,6 +11,7 @@ import 'modules/onBoarding_screen/onBoarding_screen.dart';
 import 'shared/components/constants.dart';
 import 'shared/bloc_observer.dart';
 import 'shared/styles/themes.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 void main(context) async {
   BlocOverrides.runZoned(
@@ -19,6 +20,18 @@ void main(context) async {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
+
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+      print('token: $fcmToken');
+
+      FirebaseMessaging.onMessage.listen((event) {
+        print('Data: ${event.data.toString()}');
+      });
+
+      FirebaseMessaging.onMessageOpenedApp.listen((event) {
+        print('Data: ${event.data.toString()}');
+      });
+
       // final prefs = await SharedPreferences.getInstance();
       // show = prefs.getBool('INTRODUCTION') ?? true;
       // DioHelper.init();
