@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/layout/cubit/social_cubit.dart';
 import 'package:social_app/layout/social_layout.dart';
+import 'package:social_app/shared/components/components.dart';
 import 'package:social_app/shared/network/local/chache%20_helper.dart';
 import 'firebase_options.dart';
 import 'layout/cubit/social_states.dart';
@@ -13,6 +14,11 @@ import 'shared/bloc_observer.dart';
 import 'shared/styles/themes.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print('Data: ${message.data.toString()}');
+  showToast(msg: 'BG MSG', state: ToastStates.success);
+}
+
 void main(context) async {
   BlocOverrides.runZoned(
     () async {
@@ -21,16 +27,22 @@ void main(context) async {
         options: DefaultFirebaseOptions.currentPlatform,
       );
 
+      // FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
       final fcmToken = await FirebaseMessaging.instance.getToken();
       print('token: $fcmToken');
 
       FirebaseMessaging.onMessage.listen((event) {
         print('Data: ${event.data.toString()}');
+        showToast(msg: 'FG MSG', state: ToastStates.success);
       });
 
       FirebaseMessaging.onMessageOpenedApp.listen((event) {
         print('Data: ${event.data.toString()}');
+        showToast(msg: 'Opened App MSG', state: ToastStates.success);
       });
+
+      FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
       // final prefs = await SharedPreferences.getInstance();
       // show = prefs.getBool('INTRODUCTION') ?? true;
@@ -44,13 +56,13 @@ void main(context) async {
       print('uID = $uId');
 
       final Widget widget;
-      if(onBoarding!){
-        if(uId != null){
+      if (onBoarding!) {
+        if (uId != null) {
           widget = const SocialLayoutScreen();
-        }else{
+        } else {
           widget = LoginScreen();
         }
-      }else{
+      } else {
         widget = OnBoardingScreen();
       }
       // print('onBoarding = $onBoarding');
@@ -66,6 +78,7 @@ void main(context) async {
 class MyApp extends StatelessWidget {
   final bool? isDark;
   final Widget? startWidget;
+
   const MyApp({Key? key, this.isDark, this.startWidget}) : super(key: key);
 
   // This widget is the root of your application.
@@ -77,7 +90,9 @@ class MyApp extends StatelessWidget {
         //   create: (BuildContext context) => HomeScreenCubit(),
         // ),
         BlocProvider(
-          create: (BuildContext context) => SocialCubit()..getUserData()..getPosts(),
+          create: (BuildContext context) => SocialCubit()
+            ..getUserData()
+            ..getPosts(),
         ),
       ],
       child: BlocConsumer<SocialCubit, SocialStates>(

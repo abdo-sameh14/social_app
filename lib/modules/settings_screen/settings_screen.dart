@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/layout/cubit/social_cubit.dart';
@@ -26,7 +27,8 @@ class SettingsScreen extends StatelessWidget {
                   alignment: AlignmentDirectional.bottomCenter,
                   children: [
                     Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 60),
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 60),
                       child: InkWell(
                         child: Container(
                           height: 160,
@@ -34,33 +36,33 @@ class SettingsScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(4),
                               image: DecorationImage(
-                                  image: NetworkImage(
-                                    model!.coverPic!
-                                  ),
-                                  fit: BoxFit.cover
-                              ),
-                              color: defaultColor
-                          ),
+                                  image: NetworkImage(model!.coverPic!),
+                                  fit: BoxFit.cover),
+                              color: defaultColor),
                         ),
-                        onTap: (){
-                          openImage(context: context, imageProvider: NetworkImage(model.coverPic!),);
+                        onTap: () {
+                          openImage(
+                            context: context,
+                            imageProvider: NetworkImage(model.coverPic!),
+                          );
                         },
                       ),
                     ),
                     InkWell(
                       child: CircleAvatar(
                         radius: 62,
-                        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                        backgroundColor:
+                            Theme.of(context).scaffoldBackgroundColor,
                         child: CircleAvatar(
                           radius: 60,
                           backgroundColor: defaultColor,
-                          backgroundImage: NetworkImage(
-                              model.pic!
-                          ),
+                          backgroundImage: NetworkImage(model.pic!),
                         ),
                       ),
-                      onTap: (){
-                        openImage(context: context, imageProvider: NetworkImage(model.pic!));
+                      onTap: () {
+                        openImage(
+                            context: context,
+                            imageProvider: NetworkImage(model.pic!));
                       },
                       // enableFeedback: true,
                     ),
@@ -71,21 +73,17 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 Text(
                   '${model.firstName} ${model.lastName}',
-                  style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                    fontSize: 24
-                  ),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      ?.copyWith(fontSize: 24),
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                Text(
-                  model.bio!,
-                  style: Theme.of(context).textTheme.caption
-                ),
+                Text(model.bio!, style: Theme.of(context).textTheme.caption),
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 20
-                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 20),
                   child: Row(
                     children: [
                       Expanded(
@@ -94,17 +92,18 @@ class SettingsScreen extends StatelessWidget {
                             children: [
                               Text(
                                 '100',
-                                style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                                  fontSize: 16,
-                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText2
+                                    ?.copyWith(
+                                      fontSize: 16,
+                                    ),
                               ),
-                              Text(
-                                  'Posts',
-                                  style: Theme.of(context).textTheme.caption
-                              ),
+                              Text('Posts',
+                                  style: Theme.of(context).textTheme.caption),
                             ],
                           ),
-                          onTap: (){},
+                          onTap: () {},
                         ),
                       ),
                       Expanded(
@@ -113,17 +112,18 @@ class SettingsScreen extends StatelessWidget {
                             children: [
                               Text(
                                 '60',
-                                style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                                  fontSize: 16,
-                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText2
+                                    ?.copyWith(
+                                      fontSize: 16,
+                                    ),
                               ),
-                              Text(
-                                  'Media',
-                                  style: Theme.of(context).textTheme.caption
-                              ),
+                              Text('Media',
+                                  style: Theme.of(context).textTheme.caption),
                             ],
                           ),
-                          onTap: (){},
+                          onTap: () {},
                         ),
                       ),
                       Expanded(
@@ -132,17 +132,18 @@ class SettingsScreen extends StatelessWidget {
                             children: [
                               Text(
                                 '10K',
-                                style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                                  fontSize: 16,
-                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText2
+                                    ?.copyWith(
+                                      fontSize: 16,
+                                    ),
                               ),
-                              Text(
-                                  'Followers',
-                                  style: Theme.of(context).textTheme.caption
-                              ),
+                              Text('Followers',
+                                  style: Theme.of(context).textTheme.caption),
                             ],
                           ),
-                          onTap: (){},
+                          onTap: () {},
                         ),
                       ),
                       Expanded(
@@ -151,20 +152,20 @@ class SettingsScreen extends StatelessWidget {
                             children: [
                               Text(
                                 '200',
-                                style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                                  fontSize: 16,
-                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText2
+                                    ?.copyWith(
+                                      fontSize: 16,
+                                    ),
                               ),
-                              Text(
-                                  'Following',
-                                  style: Theme.of(context).textTheme.caption
-                              ),
+                              Text('Following',
+                                  style: Theme.of(context).textTheme.caption),
                             ],
                           ),
-                          onTap: (){},
+                          onTap: () {},
                         ),
                       ),
-
                     ],
                   ),
                 ),
@@ -172,13 +173,15 @@ class SettingsScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: (){},
+                        onPressed: () {},
                         child: Text(
                           'Add Photos',
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              color: defaultColor,
-                              fontWeight: FontWeight.w500
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge
+                              ?.copyWith(
+                                  color: defaultColor,
+                                  fontWeight: FontWeight.w500),
                         ),
                       ),
                     ),
@@ -186,11 +189,34 @@ class SettingsScreen extends StatelessWidget {
                       width: 15,
                     ),
                     OutlinedButton(
-                      onPressed: (){
+                      onPressed: () {
                         navigateTo(context, EditProfileScreen());
                       },
-                      child: const Icon(
-                          IconBroken.Edit
+                      child: const Icon(IconBroken.Edit),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          FirebaseMessaging.instance
+                              .subscribeToTopic('announcement');
+                        },
+                        child: const Text('Subscribe'),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          FirebaseMessaging.instance
+                              .unsubscribeFromTopic('announcement');
+                        },
+                        child: const Text('Unsubscribe'),
                       ),
                     ),
                   ],
@@ -202,7 +228,6 @@ class SettingsScreen extends StatelessWidget {
                 //   radius: 4,
                 //   backgroundColor: Colors.blue
                 // ),
-
               ],
             ),
           ),

@@ -29,6 +29,13 @@
             {
               "client_id": "244502216538-h47llav9aipspt9pv7m6sfi8c0dlbgto.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "244502216538-409cjqdr8e06363reeg3bistulcm27st.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.abdosameh.socialApp"
+              }
             }
           ]
         }
